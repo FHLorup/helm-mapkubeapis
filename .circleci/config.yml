@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 workflows:
-  version: 2
+  version: 2.1
   untagged-build:
     jobs:
       - lint
@@ -50,9 +50,6 @@ jobs:
   tagged-build:
     docker:
       - image: cimg/go:1.22
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_PASS
     steps:
       - checkout
       - run: 
