@@ -4,6 +4,7 @@ workflows:
   untagged-build:
     jobs:
       - lint
+      - test
       - untagged-build
   tagged-build:
     jobs:
@@ -26,7 +27,7 @@ jobs:
             shellcheck -x scripts/install_plugin.sh
   untagged-build:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.22
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -35,9 +36,20 @@ jobs:
       - run: 
           command: make build
           no_output_timeout: 20m
+  test:
+    docker:
+      - image: cimg/go:1.22
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    steps:
+      - checkout
+      - run: 
+          command: make test
+
   tagged-build:
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.22
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
