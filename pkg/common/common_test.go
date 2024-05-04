@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"testing"
-
+	
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -50,6 +50,9 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 
 	var deprecatedPodSecurityPolicy string
 
+	var deprecatedHorizontalPodAutoscaler string
+	var newHorizontalPodAutoscaler string
+
 	BeforeAll(func() {
 		deprecatedPodDisruptionBudget = "apiVersion: policy/v1beta1\nkind: PodDisruptionBudget\n"
 		newPodDisruptionBudget = "apiVersion: policy/v1\nkind: PodDisruptionBudget\n"
@@ -59,6 +62,9 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 
 		deprecatedPodSecurityPolicy = "apiVersion: policy/v1beta1\nkind: PodSecurityPolicy\n"
 
+		deprecatedHorizontalPodAutoscaler = "apiVersion: autoscaling/v2beta2\nkind: HorizontalPodAutoscaler\n"
+		newHorizontalPodAutoscaler = "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\n"
+		
 		mapFile = &mapping.Metadata{
 			Mappings: []*mapping.Mapping{
 				{
@@ -88,6 +94,15 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 					DeprecatedAPI:    deprecatedPodSecurityPolicy,
 					RemovedInVersion: "v1.25",
 				},
+				{
+					// - deprecatedAPI: "apiVersion: policy/v1beta1\nkind: PodSecurityPolicy"
+					//   deprecatedInVersion: "v1.21"
+					//   removedInVersion: "v1.25"
+					DeprecatedAPI:    	 deprecatedHorizontalPodAutoscaler,
+					NewAPI:              newHorizontalPodAutoscaler,
+					DeprecatedInVersion: "v1.23",
+					RemovedInVersion:    "v1.26",
+				},
 			},
 		}
 	})
@@ -95,10 +110,12 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 	When("a deprecated API exists in the manifest", func() {
 		When("it is a superseded API", func() {
 			var (
-				deploymentManifest                           string
-				expectedResultingDeploymentManifest          string
-				podDisruptionBudgetManifest                  string
-				expectedResultingPodDisruptionBudgetManifest string
+				deploymentManifest                           		string
+				expectedResultingDeploymentManifest          		string
+				podDisruptionBudgetManifest                  		string
+				expectedResultingPodDisruptionBudgetManifest 		string
+				horizontalPodAutoscalerManifest 			 		string
+				expectedResultingHorizontalPodAutoscalerManifest	string
 			)
 
 			BeforeAll(func() {
@@ -139,18 +156,36 @@ kind: PodDisruptionBudget
 metadata:
   name: pdb-test
   namespace: test-ns`
+
+				horizontalPodAutoscalerManifest = `---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+	name: hpa-test
+	namespace: test-hpa`
+
+				expectedResultingHorizontalPodAutoscalerManifest = `---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+	name: hpa-test
+	namespace: test-hpa`
 			})
 
-			It("replaces deprecated resources with a new version in Kubernetes v1.25", func() {
-				kubeVersion125 := "v1.25"
-				modifiedDeploymentManifest, err := common.ReplaceManifestData(mapFile, deploymentManifest, kubeVersion125)
+			It("replaces deprecated resources with a new version in Kubernetes v1.28", func() {
+				kubeVersion128 := "v1.28"
 
+				modifiedDeploymentManifest, err := common.ReplaceManifestData(mapFile, deploymentManifest, kubeVersion128)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(modifiedDeploymentManifest).To(Equal(expectedResultingDeploymentManifest))
 
-				modifiedPdbManifest, err := common.ReplaceManifestData(mapFile, podDisruptionBudgetManifest, kubeVersion125)
+				modifiedPdbManifest, err := common.ReplaceManifestData(mapFile, podDisruptionBudgetManifest, kubeVersion128)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(modifiedPdbManifest).To(Equal(expectedResultingPodDisruptionBudgetManifest))
+
+				modifiedHpaManifest, err := common.ReplaceManifestData(mapFile, horizontalPodAutoscalerManifest, kubeVersion128)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(modifiedHpaManifest).To(Equal(expectedResultingHorizontalPodAutoscalerManifest))
 
 				err = CheckDecode(modifiedDeploymentManifest)
 				Expect(err).ToNot(HaveOccurred())
