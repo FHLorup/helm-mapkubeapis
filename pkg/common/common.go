@@ -82,17 +82,20 @@ func ReplaceManifestData(mapMetadata *mapping.Metadata, modifiedManifest string,
 		deprecatedAPI := mapping.DeprecatedAPI
 		supportedAPI := mapping.NewAPI
 		var apiVersionStr string
+		log.Printf("deprecatedAPI file: %s", deprecatedAPI)
 		if mapping.DeprecatedInVersion != "" {
 			apiVersionStr = mapping.DeprecatedInVersion
 		} else {
 			apiVersionStr = mapping.RemovedInVersion
 		}
+		log.Printf("apiVersionStr: %s", apiVersionStr)
 
 		if !semver.IsValid(apiVersionStr) {
 			return "", errors.Errorf("Failed to get the deprecated or removed Kubernetes version for API: %s", strings.ReplaceAll(deprecatedAPI, "\n", " "))
 		}
 
 		if count := strings.Count(modifiedManifest, deprecatedAPI); count > 0 {
+			log.Printf("string count: %s", count)
 			if semver.Compare(apiVersionStr, kubeVersionStr) > 0 {
 				log.Printf("The following API:\n\"%s\" does not require mapping as the "+
 					"API is not deprecated or removed in Kubernetes \"%s\"\n", deprecatedAPI, kubeVersionStr)

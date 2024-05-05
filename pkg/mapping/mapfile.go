@@ -17,6 +17,8 @@ limitations under the License.
 package mapping
 
 import (
+	"log"
+
 	"io/ioutil"
 
 	"sigs.k8s.io/yaml"
@@ -30,5 +32,6 @@ func LoadMapfile(filename string) (*Metadata, error) {
 	}
 	y := new(Metadata)
 	err = yaml.Unmarshal(b, y)
+	log.Printf("mapfile LoadMapFile: %s", y)
 	return y, err
 }
