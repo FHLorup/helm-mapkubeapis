@@ -24,7 +24,7 @@
 Based on the version in `plugin.yaml`, release binary will be downloaded from GitHub:
 
 ```console
-$ helm plugin install https://github.com/helm/helm-mapkubeapis
+$ helm plugin install https://github.com/FHLorup/helm-mapkubeapis
 Downloading and installing helm-mapkubeapis v0.1.0 ...
 https://github.com/helm/helm-mapkubeapis/releases/download/v0.1.0/helm-mapkubeapis_0.1.0_darwin_amd64.tar.gz
 Installed plugin: mapkubeapis

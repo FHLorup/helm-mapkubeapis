@@ -45,7 +45,9 @@ func MapReleaseWithUnSupportedAPIs(mapOptions common.MapOptions) error {
 
 	log.Printf("Check release '%s' for deprecated or removed APIs...\n", releaseName)
 	var origManifest = releaseToMap.Manifest
+	log.Printf("Original manifest: %s", origManifest)
 	modifiedManifest, err := common.ReplaceManifestUnSupportedAPIs(origManifest, mapOptions.MapFile, mapOptions.KubeConfig)
+	log.Printf("Modified manifest: %s", modifiedManifest)
 	if err != nil {
 		return err
 	}
