@@ -94,8 +94,8 @@ func ReplaceManifestData(mapMetadata *mapping.Metadata, modifiedManifest string,
 			return "", errors.Errorf("Failed to get the deprecated or removed Kubernetes version for API: %s", strings.ReplaceAll(deprecatedAPI, "\n", " "))
 		}
 
-		log.Println(modifiedManifest)
-		log.Println(deprecatedAPI)
+		log.Printf("modifiedManifest: %s", modifiedManifest)
+		log.Printf("deprecatedAPI: %s", deprecatedAPI)
 		log.Println(strings.Count(modifiedManifest, deprecatedAPI))
 
 		if count := strings.Count(modifiedManifest, deprecatedAPI); count > 0 {
