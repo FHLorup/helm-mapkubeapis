@@ -1,4 +1,4 @@
-name: "mapkubeapis-l"
+name: "mapkubeapis"
 version: "0.4.2"
 usage: "Map release deprecated Kubernetes APIs in-place"
 description: "Map release deprecated Kubernetes APIs in-place"
