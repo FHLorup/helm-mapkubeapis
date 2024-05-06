@@ -1,4 +1,4 @@
-module github.com/helm/helm-mapkubeapis
+module github.com/FHLorup/helm-mapkubeapis
 
 go 1.22.0
 

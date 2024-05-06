@@ -23,7 +23,7 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/mod/semver"
 
-	"github.com/helm/helm-mapkubeapis/pkg/mapping"
+	"github.com/FHLorup/helm-mapkubeapis/pkg/mapping"
 )
 
 // KubeConfig are the Kubernetes configuration settings
@@ -83,7 +83,6 @@ func ReplaceManifestData(mapMetadata *mapping.Metadata, modifiedManifest string,
 		deprecatedAPI := mapping.DeprecatedAPI
 		supportedAPI := mapping.NewAPI
 		var apiVersionStr string
-		log.Println(mapping.DeprecatedInVersion)
 		if mapping.DeprecatedInVersion != "" {
 			apiVersionStr = mapping.DeprecatedInVersion
 		} else {
@@ -94,8 +93,8 @@ func ReplaceManifestData(mapMetadata *mapping.Metadata, modifiedManifest string,
 			return "", errors.Errorf("Failed to get the deprecated or removed Kubernetes version for API: %s", strings.ReplaceAll(deprecatedAPI, "\n", " "))
 		}
 
-		log.Printf("modifiedManifest: %s", modifiedManifest)
 		log.Printf("deprecatedAPI: %s", deprecatedAPI)
+		log.Println(strings.Contains(modifiedManifest, deprecatedAPI))
 		log.Println(strings.Count(modifiedManifest, deprecatedAPI))
 
 		if count := strings.Count(modifiedManifest, deprecatedAPI); count > 0 {

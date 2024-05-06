@@ -2,13 +2,14 @@ package common_test
 
 import (
 	"bytes"
-	"github.com/helm/helm-mapkubeapis/pkg/common"
-	"github.com/helm/helm-mapkubeapis/pkg/mapping"
-	"github.com/pkg/errors"
-	"gopkg.in/yaml.v3"
 	"io"
 	"testing"
-	
+
+	"github.com/FHLorup/helm-mapkubeapis/pkg/common"
+	"github.com/FHLorup/helm-mapkubeapis/pkg/mapping"
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -64,7 +65,7 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 
 		deprecatedHorizontalPodAutoscaler = "apiVersion: autoscaling/v2beta2\nkind: HorizontalPodAutoscaler\n"
 		newHorizontalPodAutoscaler = "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\n"
-		
+
 		mapFile = &mapping.Metadata{
 			Mappings: []*mapping.Mapping{
 				{
@@ -98,7 +99,7 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 					// - deprecatedAPI: "apiVersion: policy/v1beta1\nkind: PodSecurityPolicy"
 					//   deprecatedInVersion: "v1.21"
 					//   removedInVersion: "v1.25"
-					DeprecatedAPI:    	 deprecatedHorizontalPodAutoscaler,
+					DeprecatedAPI:       deprecatedHorizontalPodAutoscaler,
 					NewAPI:              newHorizontalPodAutoscaler,
 					DeprecatedInVersion: "v1.23",
 					RemovedInVersion:    "v1.26",
@@ -110,12 +111,12 @@ var _ = Describe("replacing deprecated APIs", Ordered, func() {
 	When("a deprecated API exists in the manifest", func() {
 		When("it is a superseded API", func() {
 			var (
-				deploymentManifest                           		string
-				expectedResultingDeploymentManifest          		string
-				podDisruptionBudgetManifest                  		string
-				expectedResultingPodDisruptionBudgetManifest 		string
-				horizontalPodAutoscalerManifest 			 		string
-				expectedResultingHorizontalPodAutoscalerManifest	string
+				deploymentManifest                               string
+				expectedResultingDeploymentManifest              string
+				podDisruptionBudgetManifest                      string
+				expectedResultingPodDisruptionBudgetManifest     string
+				horizontalPodAutoscalerManifest                  string
+				expectedResultingHorizontalPodAutoscalerManifest string
 			)
 
 			BeforeAll(func() {

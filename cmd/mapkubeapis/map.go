@@ -25,8 +25,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/helm/helm-mapkubeapis/pkg/common"
-	v3 "github.com/helm/helm-mapkubeapis/pkg/v3"
+	"github.com/FHLorup/helm-mapkubeapis/pkg/common"
+	v3 "github.com/FHLorup/helm-mapkubeapis/pkg/v3"
 )
 
 // MapOptions contains the options for Map operation
